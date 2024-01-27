@@ -113,3 +113,63 @@ aggregate(indego_trips$duration ~ indego_trips$passholder_type, FUN = mean)
 aggregate(indego_trips$duration ~ indego_trips$passholder_type, FUN = median)
 ```
 
+Before continuing, arrange the day_of_week column in the correct order.
+```{r}
+indego_trips$day_of_week <- ordered(indego_trips$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+```
+
+Next, we will check the average ride time per day and the total number of trips for daily, monthly, and yearly subscribers.
+```{r}
+plot <- indego_trips %>% 
+  group_by(passholder_type, day_of_week) %>%  #groups by type of customer
+  summarise(number_of_rides = n() #calculates the number of rides and average duration 
+  ,average_ride_length = mean(duration),.groups="drop") %>% # calculates the average duration
+  arrange(passholder_type, day_of_week) #sort
+```
+
+## SHARE
+Next, we will create visualizations to share with stakeholders as well as give us a better idea of what insights to share.
+```{r}
+ ggplot(plot,aes(x = day_of_week, y = number_of_rides, fill = passholder_type)) + 
+ labs(title ="Total rides of Customers vs. Day of the Week") +
+ geom_col(width=0.5, position = position_dodge(width=0.5))+
+ scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+```
+
+This chart indicates that monthly customers use Indego bikes the most, followed by yearly customers, and then lastly daily customers. It also shows that monthly and yearly customers ride bikes more often during the weekdays, while daily customers ride more often during the weekends. 
+
+```{r}
+indego_trips %>%  
+  group_by(passholder_type, month) %>% 
+  summarise(number_of_rides = n(),.groups="drop") %>% 
+  arrange(passholder_type, month)  %>% 
+  ggplot(aes(x = month, y = number_of_rides, fill = passholder_type)) +
+  labs(title ="Total rides of Customers by Month") +
+  theme(axis.text.x = element_text(angle = 45)) +
+  geom_col(width=0.5, position = position_dodge(width=0.5)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+```
+
+The above chart indicates that all customers tended to cycle more during April-October, which is understandable due to the warmer weather. 
+
+```{r}
+ggplot(plot,aes(x = day_of_week, y = average_ride_length, fill = passholder_type)) +
+  geom_col(width=0.5, position = position_dodge(width=0.5)) + 
+  labs(title ="Average ride time of Customers Vs. Day of the week")+
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+```
+
+We can observe that daily customers cycled for much longer periods of time throughout the week than monthly and yearly customers.
+
+## ACT
+For the last step in the data analysis process, we will make three recommendations to increase the number of Subscribers every year. First, we will review insights that were made during the share process.
+
+### Key Insights: 
+1. Monthly customers used Indego bikes than both yearly and daily customers combined. Yearly customers used bikes more frequently than daily customers also by a wide margin.
+2. All customers used Indego bikes more frequently during the warmer months of the year (April-October) 
+3. Daily customers rode Indego bikes for longer periods of time than monthly and yearly customers. 
+
+### Recommendations:
+1. Target new or daily customers on the weekends and provide discounts for these groups to switch to monthly and/or yearly subscriptions. 
+2. Create a Indego bike share campaign during the summer months to attract more potential customers. 
+
