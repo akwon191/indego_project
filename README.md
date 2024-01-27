@@ -1,4 +1,4 @@
-# INDEGO BIKE SHARE CASE STUDY
+# INDEGO BIKE SHARE CASE STUDY WITH R
 
 ## Business Scenario
 You are a junior data analyst working on the marketing analyst team at Indego, a bike-share
