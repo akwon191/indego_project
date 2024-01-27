@@ -2,7 +2,7 @@
 title: "R Indego Project"
 author: "Andy Kwon"
 date: "2024-01-26"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
