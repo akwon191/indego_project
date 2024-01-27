@@ -125,7 +125,7 @@ Next, we will create visualizations to share with stakeholders as well as give u
  geom_col(width=0.5, position = position_dodge(width=0.5))+
  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 ```
-
+IMG_1.png
 This chart indicates that monthly customers use Indego bikes the most, followed by yearly customers, and then lastly daily customers. It also shows that monthly and yearly customers ride bikes more often during the weekdays, while daily customers ride more often during the weekends. 
 
 ```{r}
