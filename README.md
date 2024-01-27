@@ -119,6 +119,7 @@ plot <- indego_trips %>%
 
 ## SHARE
 Next, we will create visualizations to share with stakeholders as well as give us a better idea of what insights to share.
+
 ```{r}
  ggplot(plot,aes(x = day_of_week, y = number_of_rides, fill = passholder_type)) + 
  labs(title ="Total rides of Customers vs. Day of the Week") +
@@ -126,6 +127,7 @@ Next, we will create visualizations to share with stakeholders as well as give u
  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 ```
 ![alt text](https://raw.githubusercontent.com/akwon191/indego_project/49c93890dc5d61c44051dc679c2fc25e6120b486/IMG_1.png)
+
 This chart indicates that monthly customers use Indego bikes the most, followed by yearly customers, and then lastly daily customers. It also shows that monthly and yearly customers ride bikes more often during the weekdays, while daily customers ride more often during the weekends. 
 
 ```{r}
@@ -139,6 +141,7 @@ indego_trips %>%
   geom_col(width=0.5, position = position_dodge(width=0.5)) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 ```
+![alt text](https://raw.githubusercontent.com/akwon191/indego_project/49c93890dc5d61c44051dc679c2fc25e6120b486/IMG_2.png)
 
 The above chart indicates that all customers tended to cycle more during April-October, which is understandable due to the warmer weather. 
 
@@ -148,6 +151,7 @@ ggplot(plot,aes(x = day_of_week, y = average_ride_length, fill = passholder_type
   labs(title ="Average ride time of Customers Vs. Day of the week")+
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 ```
+![alt text](https://raw.githubusercontent.com/akwon191/indego_project/49c93890dc5d61c44051dc679c2fc25e6120b486/IMG_3.png)
 
 We can observe that daily customers cycled for much longer periods of time throughout the week than monthly and yearly customers.
 
