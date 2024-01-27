@@ -1,0 +1,115 @@
+---
+title: "R Indego Project"
+author: "Andy Kwon"
+date: "2024-01-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Business Scenario
+You are a junior data analyst working on the marketing analyst team at Indego, a bike-share
+company in Philadelphia. The director of marketing believes the company’s future success
+depends on maximizing the number of annual memberships. Therefore, your team wants to
+understand how casual riders and annual members use Indego bikes differently. From these
+insights, your team will design a new marketing strategy to convert casual riders into annual
+members. But first, Indego executives must approve your recommendations, so they must be
+backed up with compelling data insights and professional data visualizations.
+
+## ASK
+Two questions will guide the future marketing program:
+
+1. How do annual members and casual riders use Indego bikes differently?
+2. How can Indego use digital media to influence casual riders to become members?
+
+## PREPARE
+
+Dataset: https://www.rideindego.com/about/data
+
+  -For this purposes of this analysis, I will use Q1 2023 to Q4 2023 data
+
+```{r}  
+#install packages
+install.packages("tidyverse")
+install.packages("lubridate")
+install.packages("ggplot2")
+install.packages("dplyr")
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+#import data sets
+q1_2023 <- read.csv("/Users/andyokwon/workspace/csv_indego/indego-trips-2023-q1.csv")
+q2_2023 <- read.csv("/Users/andyokwon/workspace/csv_indego/indego-trips-2023-q2.csv")
+q3_2023 <- read.csv("/Users/andyokwon/workspace/csv_indego/indego-trips-2023-q3.csv")
+q4_2023 <- read.csv("/Users/andyokwon/workspace/csv_indego/indego-trips-2023-q4.csv")
+```
+
+## PROCESS
+First, we need to check the column names first before merging the four datasets. 
+```{r}
+colnames(q1_2023)
+colnames(q2_2023)
+colnames(q3_2023)
+colnames(q4_2023)
+```
+
+Great, all column names from the datasets match. Now, we will check the datatypes of each column to make sure that all data is formatted properly. 
+```{r}
+str(q1_2023)
+str(q2_2023)
+str(q3_2023)
+str(q4_2023)
+```
+
+We need to change the bike id in datasets q2, q3, and q4 to be integers instead of char.
+```{r}
+suppressWarnings({
+  q2_2023 <- mutate(q2_2023, bike_id = as.integer(bike_id))
+  q3_2023 <- mutate(q3_2023, bike_id = as.integer(bike_id))
+  q4_2023 <- mutate(q4_2023, bike_id = as.integer(bike_id))
+})
+```
+
+The datasets are now ready to be merged into a single dataframe.
+```{r}
+indego_trips = bind_rows(q1_2023, q2_2023, q3_2023, q4_2023)
+```
+
+Next, we will add columns that list the day, month, and year of each trip. This will allow us to aggregate trip data for each day, month or year.
+```{r}
+indego_trips$date <- as.Date(indego_trips$start_time)
+indego_trips$month <- format(as.Date(indego_trips$date), "%m")
+indego_trips$day <- format(as.Date(indego_trips$date), "%d")
+indego_trips$year <- format(as.Date(indego_trips$date), "%Y")
+indego_trips$day_of_week <- format(as.Date(indego_trips$date), "%A")
+colnames(indego_trips)
+```
+
+Before performing analysis, let's look at the final dataframe
+```{r}
+glimpse(indego_trips)
+```
+
+## ANALYZE
+We will now perform a descriptive analysis of the data and see if we can find
+any trends/patterns between daily, monthly, and yearly riders. First, we will look at some basic descriptive statistics of the duration of bike trips in minutes.
+```{r}
+mean(indego_trips$duration)
+median(indego_trips$duration)
+max(indego_trips$duration)
+min(indego_trips$duration)
+```
+
+Now, we will compare day(daily pass), indego30(monthly pass), and indego 365(yearly pass) riders. 
+```{r}
+aggregate(indego_trips$duration ~ indego_trips$passholder_type, FUN = mean)
+aggregate(indego_trips$duration ~ indego_trips$passholder_type, FUN = median)
+```
+
